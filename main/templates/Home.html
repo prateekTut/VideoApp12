@@ -1,0 +1,191 @@
+{% load static %}
+<!DOCTYPE html>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Videozz - Home</title>
+    <link rel="stylesheet" href="{% static 'cs/styles.css' %}" />
+    <link rel="stylesheet" href="{% static 'cs/home.css' %}" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+    />
+  </head>
+  <body>
+    <header>
+      <div class="logo"><i class="fas fa-play-circle"></i> Videozz</div>
+      <nav>
+        <a href="{% url 'signup' %}"
+          ><i class="fas fa-user-plus"></i> Sign Up</a
+        >
+        {% if user.is_authenticated %}
+
+        <a href="{% url 'logout' %}"><i class="fas fa-user-plus"></i> Logout</a>
+        {% else %}
+        <a href="{% url 'login' %}"><i class="fas fa-sign-in-alt"></i> Login</a>
+        {% endif %}
+      </nav>
+    </header>
+
+    <div class="container">
+      <section id="intro">
+        <h1>Welcome to Videozz</h1>
+        <p>Discover and enjoy videos from various categories.</p>
+        <img
+          src="{% static '/images/newLanding.jpg' %}"
+          alt="Videozz Introduction"
+        />
+      </section>
+
+      <section id="about">
+        <h2><i class="fas fa-info-circle"></i> About Videozz</h2>
+        <p>
+          Videozz is a premium video streaming platform that offers a wide range
+          of content across multiple categories.
+        </p>
+      </section>
+
+      <section id="categories">
+        <h2><i class="fas fa-list"></i> Video Categories</h2>
+        <div id="category-buttons"></div>
+      </section>
+
+      <section id="videos">
+        <h2><i class="fas fa-film"></i> Featured Videos</h2>
+        <div id="video-container">
+          <!-- Video cards will be dynamically inserted here -->
+        </div>
+      </section>
+    </div>
+
+    <footer>
+      <p>&copy; 2024 Videozz. All rights reserved.</p>
+    </footer>
+
+    <template id="video-card-template">
+      <div class="video-card">
+        <iframe
+          width="560"
+          height="315"
+          frameborder="0"
+          allowfullscreen
+        ></iframe>
+        <h3></h3>
+        <form
+          class="comment-form"
+          method="post"
+          action="{% url 'add_comment' %}"
+        >
+          {% csrf_token %}
+          <textarea
+            id="id_comments"
+            name="comments"
+            rows="3"
+            placeholder="Add a comment"
+            required
+          ></textarea>
+          <div class="rating">
+            <span class="star" data-rating="1">☆</span>
+            <span class="star" data-rating="2">☆</span>
+            <span class="star" data-rating="3">☆</span>
+            <span class="star" data-rating="4">☆</span>
+            <span class="star" data-rating="5">☆</span>
+          </div>
+          <input type="hidden" class="rating-input" name="rating" value="0" />
+          <button type="submit" class="btn">Submit Comment</button>
+        </form>
+        <div class="success-message" style="display: none; color: green"></div>
+        <div class="error-message" style="display: none; color: red"></div>
+        <div class="comments-section">
+          <div class="comment">
+            <div class="user-icon">
+              <i class="fas fa-user-circle"></i>
+            </div>
+            <div class="comment-content">
+              <strong>User1</strong>
+              <p>Great video!</p>
+            </div>
+          </div>
+          <div class="comment">
+            <div class="user-icon">
+              <i class="fas fa-user-circle"></i>
+            </div>
+            <div class="comment-content">
+              <strong>User2</strong>
+              <p>I learned a lot from this.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </template>
+
+    {% comment %}
+    <script>
+      $(document).ready(function () {
+        $(".comment-form").on("submit", function (event) {
+          event.preventDefault(); // Prevent default form submission
+          var formData = $(this).serialize(); // Serialize form data
+
+          // AJAX request
+          $.ajax({
+            url: $(this).attr("action"), // Form action URL
+            type: "POST", // HTTP method
+            data: formData, // Form data to be submitted
+            success: function (response) {
+              console.log("Comment added successfully");
+              // Optionally update UI or display a success message
+            },
+            error: function (xhr, status, error) {
+              console.error("Error:", error);
+              // Handle errors or display error messages
+            },
+          });
+        });
+      });
+    </script>
+    {% endcomment %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+      $(document).ready(function () {
+        $(".comment-form").on("submit", function (event) {
+          event.preventDefault(); // Prevent default form submission
+
+          var commentForm = $(this); // Reference to the current comment form
+          var commentText = commentForm.find("#id_comments").val(); // Get the textarea value
+          var ratingValue = commentForm.find(".rating-input").val(); // Get the rating input value
+
+          // AJAX request
+          $.ajax({
+            url: commentForm.attr("action"), // Form action URL
+            type: "POST", // HTTP method
+            data: {
+              comments: commentText,
+              rating: ratingValue,
+              csrfmiddlewaretoken: commentForm
+                .find('input[name="csrfmiddlewaretoken"]')
+                .val(), // Include CSRF token
+            },
+            dataType: "json", // Specify the expected response type
+            success: function (response) {
+              console.log("Comment and rating added successfully");
+              alert("Comment added successfully"); // Ensure this line is executed
+            },
+            error: function (xhr, status, error) {
+              console.error("Error:", error);
+              // Handle errors or display error messages
+              commentForm
+                .find(".error-message")
+                .text("Error adding comment")
+                .show();
+            },
+          });
+        });
+      });
+    </script>
+
+    <script src="{% static 'js/script.js' %}"></script>
+  </body>
+</html>

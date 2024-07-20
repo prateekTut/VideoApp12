@@ -1,0 +1,12 @@
+<!-- add_rating.html -->
+
+{% block content %}
+<div class="container">
+  <h2>Rate </h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Rate</button>
+  </form>
+</div>
+{% endblock %}

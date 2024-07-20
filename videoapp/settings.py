@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-4lowiw@0fq&t7v8^+axow=46e+*nv^j*ybb4tmc8xsx(osr15&
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 import os
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['https://videoappin.azurewebsites.net/']
 
 
 # Application definition

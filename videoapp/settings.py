@@ -25,8 +25,7 @@ SECRET_KEY = 'django-insecure-4lowiw@0fq&t7v8^+axow=46e+*nv^j*ybb4tmc8xsx(osr15&
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 import os
-ALLOWED_HOSTS = ['videoappin.azurewebsites.net']
-
+ALLOWED_HOSTS = ['videoappin.azurewebsites.net', 'localhost', '127.0.0.1']
 
 # Application definition
 
@@ -85,10 +84,11 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-CSRF_TRUSTED_ORIGINS = ['https://videoappin.azurewebsites.net/','http://127.0.0.1:8000/']
-
+CSRF_TRUSTED_ORIGINS = ['https://videoappin.azurewebsites.net']
 CORS_ALLOW_ALL_ORIGINS = True
-
+CORS_ALLOWED_ORIGINS = [
+    "https://videoappin.azurewebsites.net",
+]
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 
